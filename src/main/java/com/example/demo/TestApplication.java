@@ -31,10 +31,11 @@ public class TestApplication implements CommandLineRunner {
 
 	/**
 	 * Création des données de tests
+	 * Transactional : Permet de faire en sorte que toute la méthode soit transactionnelle,
+	 * càd que l'on execute le commit qu'à la fin de la méthode pas à chaque save
 	 */
 	@Override
-	@Transactional // Permet de faire en sorte que toute la méthode soit transactionnelle, càd que
-					// l'on execute le commit qu'à la fin de la méthode pas à chaque save
+	@Transactional
 	public void run(final String... args) throws Exception {
 		this.us.supprimerTousUtilisateurs();
 		this.ts.supprimerToutesEquipes();

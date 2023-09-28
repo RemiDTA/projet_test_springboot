@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Team;
@@ -32,13 +33,26 @@ public class TeamController {
 		this.ts.majEquipe(equipe);
 	}
 
+	/**
+	 * Retourne les équipes en filtrant par emplacement si spécifié, sinon retourne
+	 * l'ensemble des équipes
+	 *
+	 * exemple : localhost:8080/team?emplacement=PARIS
+	 *
+	 * @param emplacement
+	 * @return
+	 */
 	@GetMapping
-	public List<Team> listerEquipes() {
+	public List<Team> listerEquipes(@RequestParam(name = "emplacement", required = false) final String emplacement) {
+		// Si on a un paramètre emplacement de renseigner, on retourne ces equipes
+		if (emplacement != null)
+			return this.ts.recupererEquipeParEmplacement(emplacement);
+		// Sinon par défaut on les retourne toutes
 		return this.ts.recupererToutesEquipes();
 	}
 
 	@GetMapping("/{id}")
-	public Optional<Team> getTeamById(@PathVariable final Long id) {
+	public Optional<Team> recupererTeamParId(@PathVariable final Long id) {
 		return this.ts.recupererTeamParId(id);
 	}
 

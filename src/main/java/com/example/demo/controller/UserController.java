@@ -34,11 +34,11 @@ public class UserController {
 
 	@GetMapping
 	public List<User> listerUsers() {
-		return userServ.findAll();
+		return userServ.recupererTousUser();
 	}
 
 	@GetMapping("/{id}")
 	public Optional<User> getUserById(@PathVariable Long id) {
-		return userServ.getUserById(id);
+		return userServ.recupererUserParId(id);
 	}
 }

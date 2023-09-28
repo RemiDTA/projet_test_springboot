@@ -18,7 +18,7 @@ public class UserService {
 	public void creerUser(final User utilisateur) {
 		// En théorie faudrait 2 messages
 		final String telephone = utilisateur.getTelephone();
-		if (this.getByTel(telephone) != null)
+		if (this.recupererUserParTel(telephone) != null)
 			throw new IllegalArgumentException("Telephone déjà existant " + telephone);
 		this.userRepo.save(utilisateur);
 	}
@@ -29,11 +29,11 @@ public class UserService {
 		this.userRepo.save(utilisateur);
 	}
 
-	public Optional<User> getUserById(final Long id) {
+	public Optional<User> recupererUserParId(final Long id) {
 		return this.userRepo.findById(id);
 	}
 
-	public User getByTel(final String telephone) {
+	public User recupererUserParTel(final String telephone) {
 		final List<User> listeUtilisateurTrouver = this.userRepo.findByTelephone(telephone);
 		if (!listeUtilisateurTrouver.isEmpty())
 			return listeUtilisateurTrouver.get(0);
@@ -41,7 +41,7 @@ public class UserService {
 		return null;
 	}
 
-	public void deleteUser(final User utilisateur) {
+	public void supprimerUser(final User utilisateur) {
 		this.userRepo.delete(utilisateur);
 	}
 
@@ -49,7 +49,7 @@ public class UserService {
 		this.userRepo.deleteAll();
 	}
 
-	public List<User> findAll() {
+	public List<User> recupererTousUser() {
 		return this.userRepo.findAll();
 	}
 
