@@ -41,8 +41,18 @@ public class UserService {
 		return null;
 	}
 
-	public void supprimerUser(final User utilisateur) {
-		this.userRepo.delete(utilisateur);
+	/**
+	 * La suppression est possible sous les conditions suivantes :
+	 * L'utilisateur n'est chef d'aucune équipe
+	 *
+	 * @param utilisateur
+	 */
+	public void supprimerUser(final Long id) {
+		// Le code suivant n'est pas utile car la contrainte de clef étrangère tel que défini au niveau du modèle vérifie déjà ce cas
+		// final List<Team> equipeResponsable = utilisateur.getEquipeResponsable();
+		// if (equipeResponsable != null && !equipeResponsable.isEmpty())
+		// throw new IllegalArgumentException("Un utilisateur qui est chef d'équipe ne peux être supprimer");
+		this.userRepo.deleteById(id);
 	}
 
 	public void supprimerTousUtilisateurs() {

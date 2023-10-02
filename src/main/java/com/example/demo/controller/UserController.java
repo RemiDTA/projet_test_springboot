@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,22 +24,31 @@ public class UserController {
 	UserService userServ;
 
 	@PostMapping
-	public void creerUser(@RequestBody User utilisateur) {
-		userServ.creerUser(utilisateur);
+	public void creerUser(@RequestBody final User utilisateur) {
+		this.userServ.creerUser(utilisateur);
 	}
 
-	@PatchMapping
-	public void majUser(@RequestBody User utilisateur) {
-		userServ.majUser(utilisateur);
+	/**
+	 * @param utilisateur
+	 * @param id          PathVariable pour respecter les bonnes pratiques REST, néanmoins l'ID étant présent dans le body et n'est pas utilisé par le service
+	 */
+	@PatchMapping("/{id}")
+	public void majUser(@RequestBody final User utilisateur, @PathVariable final long id) {
+		this.userServ.majUser(utilisateur);
 	}
 
 	@GetMapping
 	public List<User> listerUsers() {
-		return userServ.recupererTousUser();
+		return this.userServ.recupererTousUser();
 	}
 
 	@GetMapping("/{id}")
-	public Optional<User> getUserById(@PathVariable Long id) {
-		return userServ.recupererUserParId(id);
+	public Optional<User> recupererUserById(@PathVariable final Long id) {
+		return this.userServ.recupererUserParId(id);
+	}
+
+	@DeleteMapping("/{id}")
+	public void supprimerUser(@PathVariable final Long id) {
+		this.userServ.supprimerUser(id);
 	}
 }
