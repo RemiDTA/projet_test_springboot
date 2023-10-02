@@ -39,4 +39,8 @@ public class TeamService {
 		this.tr.deleteAll();
 	}
 
+	public void supprimerEquipe(final Long id) {
+		this.tr.deleteById(id);
+	}
+
 }
