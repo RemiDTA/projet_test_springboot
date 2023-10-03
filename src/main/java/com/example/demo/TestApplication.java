@@ -62,6 +62,7 @@ public class TestApplication implements CommandLineRunner {
 			utilisateur.setTelephone(TEL_BIDON + i);
 			this.us.creerUser(utilisateur);
 
+			// Le 1er des utilisateurs pair devient chef de l'équipe pair (idem impaire)
 			if (i % 2 == 0) {
 				if (equipePair.getChefEquipe() == null)
 					equipePair.setChefEquipe(utilisateur);

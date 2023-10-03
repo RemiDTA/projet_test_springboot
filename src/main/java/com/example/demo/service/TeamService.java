@@ -15,7 +15,7 @@ public class TeamService {
 	@Autowired
 	TeamRepository tr;
 
-	public Optional<Team> recupererTeamParId(final long id) {
+	public Optional<Team> recupererEquipeParId(final long id) {
 		return this.tr.findById(id);
 	}
 

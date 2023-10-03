@@ -41,6 +41,10 @@ public class Team {
 		this.description = description;
 	}
 
+	public long getId() {
+		return this.id;
+	}
+
 	public String getEmplacement() {
 		return this.emplacement;
 	}

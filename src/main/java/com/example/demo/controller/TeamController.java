@@ -53,12 +53,12 @@ public class TeamController {
 	}
 
 	@GetMapping("/{id}")
-	public Optional<Team> recupererTeamParId(@PathVariable final Long id) {
-		return this.ts.recupererTeamParId(id);
+	public Optional<Team> recupererEquipeParId(@PathVariable final Long id) {
+		return this.ts.recupererEquipeParId(id);
 	}
 
 	@DeleteMapping("/{id}")
-	public void supprimerTeam(@PathVariable final Long id) {
+	public void supprimerEquipe(@PathVariable final Long id) {
 		this.ts.supprimerEquipe(id);
 	}
 
