@@ -15,6 +15,9 @@ public class TeamService {
 	@Autowired
 	TeamRepository tr;
 
+	@Autowired
+	UserService us;
+
 	public Optional<Team> recupererEquipeParId(final long id) {
 		return this.tr.findById(id);
 	}
@@ -39,7 +42,7 @@ public class TeamService {
 		this.tr.deleteAll();
 	}
 
-	public void supprimerEquipe(final Long id) {
+	public void supprimerEquipe(final long id) {
 		this.tr.deleteById(id);
 	}
 

@@ -29,8 +29,8 @@ public class TeamController {
 		this.ts.creerEquipe(equipe);
 	}
 
-	@PatchMapping
-	public void majEquipe(@RequestBody final Team equipe) {
+	@PatchMapping("/{id}")
+	public void majEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
 		this.ts.majEquipe(equipe);
 	}
 
@@ -57,6 +57,12 @@ public class TeamController {
 		return this.ts.recupererEquipeParId(id);
 	}
 
+	/**
+	 * La suppression d'une équipe est possible sous les conditions suivantes :
+	 * - Il n'existe aucun utilisateur qui appartienne à cet équipe
+	 *
+	 * @param id
+	 */
 	@DeleteMapping("/{id}")
 	public void supprimerEquipe(@PathVariable final Long id) {
 		this.ts.supprimerEquipe(id);

@@ -18,7 +18,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
 
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
@@ -179,7 +178,6 @@ public class TeamControllerTest {
 	}
 
 	@Test
-	@Rollback
 	public void testSupprimerEquipe() {
 		this.restTemplate.delete(String.format(URL_TEAM_ID, this.equipeTestDelete.getId()));
 		assertFalse(this.tr.findById(this.equipeTestDelete.getId()).isPresent());

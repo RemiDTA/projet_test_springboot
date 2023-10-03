@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
@@ -21,11 +22,11 @@ import com.example.demo.service.UserService;
 public class UserController {
 
 	@Autowired
-	UserService userServ;
+	UserService us;
 
 	@PostMapping
 	public void creerUser(@RequestBody final User utilisateur) {
-		this.userServ.creerUser(utilisateur);
+		this.us.creerUser(utilisateur);
 	}
 
 	/**
@@ -34,21 +35,26 @@ public class UserController {
 	 */
 	@PatchMapping("/{id}")
 	public void majUser(@RequestBody final User utilisateur, @PathVariable final long id) {
-		this.userServ.majUser(utilisateur);
+		this.us.majUser(utilisateur);
 	}
 
 	@GetMapping
 	public List<User> listerUsers() {
-		return this.userServ.recupererTousUser();
+		return this.us.recupererTousUser();
 	}
 
 	@GetMapping("/{id}")
 	public Optional<User> recupererUserById(@PathVariable final Long id) {
-		return this.userServ.recupererUserParId(id);
+		return this.us.recupererUserParId(id);
 	}
 
 	@DeleteMapping("/{id}")
 	public void supprimerUser(@PathVariable final Long id) {
-		this.userServ.supprimerUser(id);
+		this.us.supprimerUser(id);
+	}
+
+	@PatchMapping("associer_equipe/{id}")
+	public void ajouterUtilisateur(@RequestBody final Team equipe, @PathVariable final long id) {
+		this.us.ajouterUtilisateur(equipe, id);
 	}
 }

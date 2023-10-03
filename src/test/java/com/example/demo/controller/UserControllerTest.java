@@ -63,8 +63,6 @@ public class UserControllerTest {
 
 	private static final String TEL_CORRECT_3 = "0633333333";
 
-	private static final String TEL_CORRECT_4 = "0644444444";
-
 	private User utilisateurTest1 = null;
 
 	private User utilisateurTest2 = null;
@@ -102,7 +100,7 @@ public class UserControllerTest {
 		final User utilisateurTest = new User();
 		utilisateurTest.setNom(NOM_UTILISATEUR_TEST_1_INITIAL);
 		utilisateurTest.setPrenom(PRENOM_UTILISATEUR_TEST_1_INITIAL);
-		utilisateurTest.setTelephone(TEL_CORRECT_4);
+		utilisateurTest.setTelephone(TEL_CORRECT_3);
 
 		final User utilisateurTest2 = new User();
 		utilisateurTest2.setNom(NOM_UTILISATEUR_TEST_2_INITIAL);
