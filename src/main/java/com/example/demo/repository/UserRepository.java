@@ -3,6 +3,8 @@ package com.example.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.model.User;
@@ -11,4 +13,9 @@ import com.example.demo.model.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findByTelephone(String numeroTelephone);
+
+	List<User> findByTelephoneStartingWith(String prefixe);
+
+	@Query(value = "SELECT * FROM user WHERE telephone LIKE :debutTel%", nativeQuery = true)
+	List<User> utilisateurDontTelephoneCommencePar(@Param("debutTel") String prefixe);
 }

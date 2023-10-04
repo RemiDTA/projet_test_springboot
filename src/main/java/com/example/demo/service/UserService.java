@@ -86,4 +86,12 @@ public class UserService {
 		return this.majUtilisateur(utilisateur);
 	}
 
+	public List<User> recupererUtilisateurEn07() {
+		return this.ur.utilisateurDontTelephoneCommencePar("07");
+	}
+
+	public List<User> recupererUtilisateurEn06() {
+		return this.ur.findByTelephoneStartingWith("06");
+	}
+
 }

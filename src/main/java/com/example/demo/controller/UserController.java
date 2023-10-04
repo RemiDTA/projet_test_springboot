@@ -59,4 +59,14 @@ public class UserController {
 	public User associerEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
 		return this.us.associerEquipe(equipe, id);
 	}
+
+	@GetMapping("/telephone/06")
+	public List<User> recupererUtilisateurEn06() {
+		return this.us.recupererUtilisateurEn06();
+	}
+
+	@GetMapping("/telephone/07")
+	public List<User> recupererUtilisateurEn07() {
+		return this.us.recupererUtilisateurEn07();
+	}
 }
