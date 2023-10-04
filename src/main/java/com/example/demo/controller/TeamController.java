@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,13 +25,13 @@ public class TeamController {
 	TeamService ts;
 
 	@PostMapping
-	public void creerEquipe(@RequestBody final Team equipe) {
-		this.ts.creerEquipe(equipe);
+	public Team creerEquipe(@RequestBody final Team equipe) {
+		return this.ts.creerEquipe(equipe);
 	}
 
 	@PatchMapping("/{id}")
-	public void majEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
-		this.ts.majEquipe(equipe);
+	public Team majEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
+		return this.ts.majEquipe(equipe);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class TeamController {
 	}
 
 	@GetMapping("/{id}")
-	public Optional<Team> recupererEquipeParId(@PathVariable final Long id) {
+	public Team recupererEquipeParId(@PathVariable final Long id) {
 		return this.ts.recupererEquipeParId(id);
 	}
 
@@ -64,8 +64,9 @@ public class TeamController {
 	 * @param id
 	 */
 	@DeleteMapping("/{id}")
-	public void supprimerEquipe(@PathVariable final Long id) {
+	public ResponseEntity<Void> supprimerEquipe(@PathVariable final Long id) {
 		this.ts.supprimerEquipe(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

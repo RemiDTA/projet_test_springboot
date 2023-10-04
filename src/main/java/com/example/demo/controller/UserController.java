@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,36 +25,38 @@ public class UserController {
 	UserService us;
 
 	@PostMapping
-	public void creerUser(@RequestBody final User utilisateur) {
-		this.us.creerUser(utilisateur);
+	public User creerUtilisateur(@RequestBody final User utilisateur) {
+		return this.us.creerUtilisateur(utilisateur);
 	}
 
 	/**
 	 * @param utilisateur
 	 * @param id          PathVariable pour respecter les bonnes pratiques REST, néanmoins l'ID étant présent dans le body et n'est pas utilisé par le service
+	 * @return
 	 */
 	@PatchMapping("/{id}")
-	public void majUser(@RequestBody final User utilisateur, @PathVariable final long id) {
-		this.us.majUser(utilisateur);
+	public User majUtilisateur(@RequestBody final User utilisateur, @PathVariable final long id) {
+		return this.us.majUtilisateur(utilisateur);
 	}
 
 	@GetMapping
-	public List<User> listerUsers() {
-		return this.us.recupererTousUser();
+	public List<User> listerUtilisateurs() {
+		return this.us.recupererTousUtilisateurs();
 	}
 
 	@GetMapping("/{id}")
-	public Optional<User> recupererUserById(@PathVariable final Long id) {
-		return this.us.recupererUserParId(id);
+	public User recupererUtilisateurParId(@PathVariable final Long id) {
+		return this.us.recupererUtilisateurParId(id);
 	}
 
 	@DeleteMapping("/{id}")
-	public void supprimerUser(@PathVariable final Long id) {
-		this.us.supprimerUser(id);
+	public ResponseEntity<Void> supprimerUtilisateur(@PathVariable final Long id) {
+		this.us.supprimerUtilisateur(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@PatchMapping("associer_equipe/{id}")
-	public void ajouterUtilisateur(@RequestBody final Team equipe, @PathVariable final long id) {
-		this.us.ajouterUtilisateur(equipe, id);
+	public User associerEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
+		return this.us.associerEquipe(equipe, id);
 	}
 }

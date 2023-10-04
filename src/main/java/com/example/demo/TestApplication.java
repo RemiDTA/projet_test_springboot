@@ -60,7 +60,7 @@ public class TestApplication implements CommandLineRunner {
 			utilisateur.setNom("Smith");
 			utilisateur.setPrenom("John " + i);
 			utilisateur.setTelephone(TEL_BIDON + i);
-			this.us.creerUser(utilisateur);
+			this.us.creerUtilisateur(utilisateur);
 
 			// Le 1er des utilisateurs pair devient chef de l'équipe pair (idem impaire)
 			if (i % 2 == 0) {

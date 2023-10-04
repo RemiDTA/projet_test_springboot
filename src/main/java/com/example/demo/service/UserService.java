@@ -16,25 +16,28 @@ public class UserService {
 	@Autowired
 	private UserRepository ur;
 
-	public void creerUser(final User utilisateur) {
-		// En théorie faudrait 2 messages
+	public User creerUtilisateur(final User utilisateur) {
 		final String telephone = utilisateur.getTelephone();
-		if (this.recupererUserParTel(telephone) != null)
+		if (this.recupererUtilisateurParTel(telephone) != null)
 			throw new IllegalArgumentException("Telephone déjà existant " + telephone);
-		this.ur.save(utilisateur);
+		return this.ur.save(utilisateur);
 	}
 
-	public void majUser(final User utilisateur) {
+	public User majUtilisateur(final User utilisateur) {
 		if (utilisateur.getId() == null)
 			throw new IllegalArgumentException("ID obligatoire");
-		this.ur.save(utilisateur);
+		return this.ur.save(utilisateur);
 	}
 
-	public Optional<User> recupererUserParId(final Long id) {
-		return this.ur.findById(id);
+	public User recupererUtilisateurParId(final Long id) {
+		final Optional<User> optionalUtilisateur = this.ur.findById(id);
+		if (optionalUtilisateur.isEmpty())
+			throw new IllegalArgumentException(String.format("L'id %d ne correspond à aucun utilisateur", id));
+
+		return optionalUtilisateur.get();
 	}
 
-	public User recupererUserParTel(final String telephone) {
+	public User recupererUtilisateurParTel(final String telephone) {
 		final List<User> listeUtilisateurTrouver = this.ur.findByTelephone(telephone);
 		if (!listeUtilisateurTrouver.isEmpty())
 			return listeUtilisateurTrouver.get(0);
@@ -43,24 +46,26 @@ public class UserService {
 	}
 
 	/**
+	 * On pourrait se contenter d'utiliser le deleteById, cependant si l'utilisateur n'existe pas, le plantage serait silencieux
 	 * La suppression est possible sous les conditions suivantes :
 	 * L'utilisateur n'est chef d'aucune équipe
 	 *
 	 * @param utilisateur
 	 */
-	public void supprimerUser(final Long id) {
+	public void supprimerUtilisateur(final Long id) {
 		// Le code suivant n'est pas utile car la contrainte de clef étrangère tel que défini au niveau du modèle vérifie déjà ce cas
 		// final List<Team> equipeResponsable = utilisateur.getEquipeResponsable();
 		// if (equipeResponsable != null && !equipeResponsable.isEmpty())
 		// throw new IllegalArgumentException("Un utilisateur qui est chef d'équipe ne peux être supprimer");
-		this.ur.deleteById(id);
+		final User utilisateur = this.recupererUtilisateurParId(id);
+		this.ur.delete(utilisateur);
 	}
 
 	public void supprimerTousUtilisateurs() {
 		this.ur.deleteAll();
 	}
 
-	public List<User> recupererTousUser() {
+	public List<User> recupererTousUtilisateurs() {
 		return this.ur.findAll();
 	}
 
@@ -69,15 +74,16 @@ public class UserService {
 	 *
 	 * @param equipe
 	 * @param id
+	 * @return
 	 */
-	public void ajouterUtilisateur(final Team equipe, final long id) {
+	public User associerEquipe(final Team equipe, final long id) {
 		final Optional<User> optionalUtilisateur = this.ur.findById(id);
 		if (optionalUtilisateur.isEmpty())
 			throw new IllegalArgumentException("Utilisateur non trouvée");
 		final User utilisateur = optionalUtilisateur.get();
 
 		utilisateur.setEquipe(equipe);
-		this.majUser(utilisateur);
+		return this.majUtilisateur(utilisateur);
 	}
 
 }
