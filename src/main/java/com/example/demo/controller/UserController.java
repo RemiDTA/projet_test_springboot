@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
+import com.example.demo.prop.ProprieteLimite;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -23,6 +25,9 @@ public class UserController {
 
 	@Autowired
 	UserService us;
+
+	@Autowired
+	ProprieteLimite propLimite;
 
 	@PostMapping
 	public User creerUtilisateur(@RequestBody final User utilisateur) {
@@ -40,8 +45,12 @@ public class UserController {
 	}
 
 	@GetMapping
-	public List<User> listerUtilisateurs() {
-		return this.us.recupererTousUtilisateurs();
+	public List<User> listerUtilisateurs(@RequestParam(name = "pageDebut", required = false) final Integer pageDebut) {
+		// Si non spécifié on retourne tout
+		if (pageDebut == null)
+			return this.us.recupererTousUtilisateurs();
+		// Si spécifié on fait de la pagination
+		return this.us.recupererTousUtilisateursAvecPagination(pageDebut, this.propLimite.getTaillePagination());
 	}
 
 	@GetMapping("/{id}")

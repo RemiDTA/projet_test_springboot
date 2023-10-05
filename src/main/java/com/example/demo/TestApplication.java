@@ -82,6 +82,5 @@ public class TestApplication implements CommandLineRunner {
 
 		this.ts.majEquipe(equipePair);
 		this.ts.majEquipe(equipeImpair);
-
 	}
 }

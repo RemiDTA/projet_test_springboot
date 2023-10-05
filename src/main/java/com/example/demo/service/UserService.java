@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Team;
@@ -67,6 +71,19 @@ public class UserService {
 
 	public List<User> recupererTousUtilisateurs() {
 		return this.ur.findAll();
+	}
+
+	/**
+	 * Idem que recupererTousUtilisateurs mais avec gestion de paginsation
+	 *
+	 * @param debut
+	 * @param taille
+	 * @return
+	 */
+	public List<User> recupererTousUtilisateursAvecPagination(final int debut, final int taille) {
+		final Pageable pageable = PageRequest.of(debut, taille, Sort.by("id"));
+		final Page<User> retour = this.ur.findAll(pageable);
+		return retour.getContent();
 	}
 
 	/**
