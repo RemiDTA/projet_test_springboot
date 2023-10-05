@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.configuration.ProprieteLimite;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
-import com.example.demo.prop.ProprieteLimite;
 import com.example.demo.service.UserService;
 
 @RestController
