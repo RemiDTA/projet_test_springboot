@@ -46,4 +46,8 @@ public class ProjetController {
 		return this.ps.creerProjet(projet);
 	}
 
+	@GetMapping("/{id}/collaborateurs")
+	public List<User> recupererCollaborateurProjet(@PathVariable final long id) {
+		return this.ps.recupererCollaborateurProjet(id);
+	}
 }

@@ -10,6 +10,7 @@ import com.example.demo.model.Projet;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.repository.ProjetRepository;
+import com.example.demo.repository.UserRepository;
 
 @Service
 public class ProjetService {
@@ -19,6 +20,9 @@ public class ProjetService {
 
 	@Autowired
 	TeamService ts;
+
+	@Autowired
+	UserRepository ur;
 
 	public Projet recupererProjetParId(final long id) {
 		final Optional<Projet> optionalProjet = this.pr.findById(id);
@@ -88,6 +92,10 @@ public class ProjetService {
 	 */
 	public Projet ajouterCollaborateursEquipe(final Projet projet, final Team equipe) {
 		return this.ajouterCollaborateurs(projet, equipe.getUsers());
+	}
+
+	public List<User> recupererCollaborateurProjet(final long id) {
+		return this.ur.findByProjets(this.recupererProjetParId(id));
 	}
 
 }

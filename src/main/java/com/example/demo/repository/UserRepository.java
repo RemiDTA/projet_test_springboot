@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.model.Projet;
 import com.example.demo.model.User;
 
 @Repository
@@ -26,4 +27,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
 	@Override
 	Page<User> findAll(Pageable pageable);
+
+	/**
+	 * Rechercher n,n en partant du projet
+	 *
+	 * @param projet
+	 * @return
+	 */
+	List<User> findByProjets(Projet projet);
 }

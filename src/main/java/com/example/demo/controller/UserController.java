@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.configuration.ProprieteLimite;
+import com.example.demo.model.Projet;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -77,5 +78,10 @@ public class UserController {
 	@GetMapping("/telephone/07")
 	public List<User> recupererUtilisateurEn07() {
 		return this.us.recupererUtilisateurEn07();
+	}
+
+	@GetMapping("{id}/projets")
+	public List<Projet> recupererProjetsUtilisateur(@PathVariable final Long id) {
+		return this.us.recupererProjetsUtilisateur(id);
 	}
 }

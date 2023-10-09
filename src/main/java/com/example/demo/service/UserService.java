@@ -10,8 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Projet;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
+import com.example.demo.repository.ProjetRepository;
 import com.example.demo.repository.UserRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class UserService {
 
 	@Autowired
 	private UserRepository ur;
+
+	@Autowired
+	private ProjetRepository pr;
 
 	public User creerUtilisateur(final User utilisateur) {
 		final String telephone = utilisateur.getTelephone();
@@ -109,6 +114,10 @@ public class UserService {
 
 	public List<User> recupererUtilisateurEn06() {
 		return this.ur.findByTelephoneStartingWith("06");
+	}
+
+	public List<Projet> recupererProjetsUtilisateur(final long idUtilisateur) {
+		return this.pr.findByCollaborateurs(this.recupererUtilisateurParId(idUtilisateur));
 	}
 
 }
