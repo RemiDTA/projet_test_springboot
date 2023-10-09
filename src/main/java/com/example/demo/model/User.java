@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -42,6 +43,9 @@ public class User {
 	// on a une boucle infinie
 	@OneToMany(mappedBy = "chefEquipe")
 	private List<Team> equipeResponsable;
+
+	@ManyToMany(mappedBy = "collaborateurs")
+	private List<Projet> projets;
 
 	public Long getId() {
 		return this.id;

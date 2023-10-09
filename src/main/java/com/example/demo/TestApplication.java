@@ -9,8 +9,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.model.Projet;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
+import com.example.demo.service.ProjetService;
 import com.example.demo.service.TeamService;
 import com.example.demo.service.UserService;
 
@@ -24,6 +26,9 @@ public class TestApplication implements CommandLineRunner {
 
 	@Autowired
 	TeamService ts;
+
+	@Autowired
+	ProjetService ps;
 
 	public static void main(final String[] args) {
 		SpringApplication.run(TestApplication.class, args);
@@ -82,5 +87,13 @@ public class TestApplication implements CommandLineRunner {
 
 		this.ts.majEquipe(equipePair);
 		this.ts.majEquipe(equipeImpair);
+
+		final Projet projet = new Projet();
+		projet.setEntreprise("WE+");
+		projet.setNomProjet("WENEO");
+		this.ps.creerProjet(projet);
+
+		this.ps.ajouterCollaborateursEquipe(projet, equipePair);
+
 	}
 }
