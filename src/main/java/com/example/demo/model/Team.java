@@ -31,6 +31,8 @@ public class Team {
 	private User chefEquipe;
 
 	@OneToMany(mappedBy = "equipe") // La propriété "equipe" dans la classe User
+	// @Cascade(CascadeType.PERSIST) => permet de créer une relation forte entre les users et la team courante déclenchant la sauvegarde des utilisateurs lors de la sauvegarde de l'équipe
+	// Cela implique que si l'on récupère un body avec des modifications sur la liste des users, ces modifications seront sauvegardées sur chaque user
 	private List<User> users;
 
 	public String getDescription() {

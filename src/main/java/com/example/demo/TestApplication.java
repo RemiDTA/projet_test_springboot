@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Projet;
@@ -40,7 +41,7 @@ public class TestApplication implements CommandLineRunner {
 	 * càd que l'on execute le commit qu'à la fin de la méthode pas à chaque save
 	 */
 	@Override
-	@Transactional
+	@Transactional(timeout = 45, propagation = Propagation.REQUIRED) // Timeout et propagation pas utile mais pour l'exemple (propagation concerne la méthode courante)
 	public void run(final String... args) throws Exception {
 		this.us.supprimerTousUtilisateurs();
 		this.ts.supprimerToutesEquipes();

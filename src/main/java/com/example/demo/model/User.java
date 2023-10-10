@@ -47,6 +47,14 @@ public class User {
 	@ManyToMany(mappedBy = "collaborateurs")
 	private List<Projet> projets;
 
+	public List<Projet> getProjets() {
+		return this.projets;
+	}
+
+	public void setProjets(final List<Projet> projets) {
+		this.projets = projets;
+	}
+
 	public Long getId() {
 		return this.id;
 	}

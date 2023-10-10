@@ -1,0 +1,6 @@
+Un certains nombre de sujets n'ont pas été fait sur ce projet
+
+Les TU ne sont pas réaliser sur l'entiereté du code (=> comprendre le fonctionnement du patch de restTemplate, mockito)
+Validation pour la relation User => Projet afin de s'assurer de l'unicité
+Validation à faire sur le chef d'équipe pour s'assurer qu'il appartient bien à l'équipe
+Gestion des connexions via Spring Security
