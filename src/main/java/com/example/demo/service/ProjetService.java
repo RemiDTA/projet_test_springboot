@@ -98,4 +98,8 @@ public class ProjetService {
 		return this.ur.findByProjets(this.recupererProjetParId(id));
 	}
 
+	public void supprimerTousProjets() {
+		this.pr.deleteAll();
+	}
+
 }

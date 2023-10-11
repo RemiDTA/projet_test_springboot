@@ -43,8 +43,24 @@ public class TestApplication implements CommandLineRunner {
 	@Override
 	@Transactional(timeout = 45, propagation = Propagation.REQUIRED) // Timeout et propagation pas utile mais pour l'exemple (propagation concerne la méthode courante)
 	public void run(final String... args) throws Exception {
+
+		final List<Team> listeEquipe = this.ts.recupererToutesEquipes();
+		if (listeEquipe != null) {
+			for (final Team equipe : listeEquipe) {
+				equipe.setChefEquipe(null);
+				this.ts.majEquipe(equipe);
+			}
+		}
+		final List<Projet> listeProjet = this.ps.listerProjets();
+		if (listeProjet != null) {
+			for (final Projet projet : listeProjet) {
+				projet.setCollaborateurs(null);
+				this.ps.creerProjet(projet);
+			}
+		}
 		this.us.supprimerTousUtilisateurs();
 		this.ts.supprimerToutesEquipes();
+		this.ps.supprimerTousProjets();
 
 		final Team equipePair = new Team();
 		equipePair.setDescription("Equipe de Paris");
