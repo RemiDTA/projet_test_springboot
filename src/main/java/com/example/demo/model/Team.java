@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import com.example.demo.validation.EquipeValide;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,9 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
 @Table(name = "team")
+@EquipeValide // Je souhaite valider le chef d'équipe uniquement, cependant au niveau des annotations j'ai accès à ce que
+// j'essaie de valider, si je créer une annotation au niveau du champ, j'aurais le champ (chef d'équipe), mais je n'aurais pas l'objet de l'attribut (l'équipe)
+// N'ayant pas ce contexte, je ne sais pas déterminer qui sont les users à partir de l'information du chef d'équipe,
+// donc je créer une annotation au niveau de l'objet qui contient le chef d'équipe et les users
 public class Team {
 
 	@Id
@@ -25,6 +33,10 @@ public class Team {
 
 	@Column(length = 150)
 	private String emplacement;
+
+	@Column
+	@PastOrPresent // utilisation de spring validator => permet de s'assurer qu'une date est dans le passée
+	private LocalDate dateCreation;
 
 	@OneToOne
 	@JoinColumn(name = "id_chefEquipe")
@@ -69,6 +81,14 @@ public class Team {
 
 	public void setUsers(final List<User> users) {
 		this.users = users;
+	}
+
+	public LocalDate getDateCreation() {
+		return this.dateCreation;
+	}
+
+	public void setDateCreation(final LocalDate dateCreation) {
+		this.dateCreation = dateCreation;
 	}
 
 }

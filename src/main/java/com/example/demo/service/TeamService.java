@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,8 @@ public class TeamService {
 	 * @return
 	 */
 	public Team creerEquipe(final Team equipe) {
+		// Règle métier sur l'initialisation de la date de création
+		equipe.setDateCreation(LocalDate.now());
 		this.tr.save(equipe);
 
 		// Globalement à éviter mais je le conserve au cas où
