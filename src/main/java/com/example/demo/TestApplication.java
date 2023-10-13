@@ -16,6 +16,7 @@ import com.example.demo.model.User;
 import com.example.demo.service.ProjetService;
 import com.example.demo.service.TeamService;
 import com.example.demo.service.UserService;
+import com.example.demo.util.UserUtil;
 
 @SpringBootApplication
 public class TestApplication implements CommandLineRunner {
@@ -62,6 +63,14 @@ public class TestApplication implements CommandLineRunner {
 		this.ts.supprimerToutesEquipes();
 		this.ps.supprimerTousProjets();
 
+		// Création de l'utilisateur admin (tester les droits)
+		final User admin = new User();
+		admin.setNom("admin");
+		admin.setPrenom("admin");
+		admin.setEmail(UserUtil.EMAIL_ADMIN);
+		UserUtil.appliquerMdpParDefaut(admin);
+		this.us.creerUtilisateur(admin);
+
 		final Team equipePair = new Team();
 		equipePair.setDescription("Equipe de Paris");
 		equipePair.setEmplacement("PARIS");
@@ -82,6 +91,8 @@ public class TestApplication implements CommandLineRunner {
 			utilisateur.setNom("Smith");
 			utilisateur.setPrenom("John " + i);
 			utilisateur.setTelephone(TEL_BIDON + i);
+			UserUtil.genererEmailDonneeTest(utilisateur);
+			UserUtil.appliquerMdpParDefaut(utilisateur);
 			this.us.creerUtilisateur(utilisateur);
 
 			// Le 1er des utilisateurs pair devient chef de l'équipe pair (idem impaire)

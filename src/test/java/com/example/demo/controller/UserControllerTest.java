@@ -22,6 +22,7 @@ import org.springframework.test.annotation.Rollback;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import com.example.demo.util.UserUtil;
 
 /**
  * Classe de test permettant de vérifier si les API de User fonctionnent correctement.
@@ -101,13 +102,19 @@ public class UserControllerTest {
 		utilisateurTest.setNom(NOM_UTILISATEUR_TEST_1_INITIAL);
 		utilisateurTest.setPrenom(PRENOM_UTILISATEUR_TEST_1_INITIAL);
 		utilisateurTest.setTelephone(TEL_CORRECT_3);
+		UserUtil.genererEmailDonneeTest(utilisateurTest);
+		UserUtil.appliquerMdpParDefaut(utilisateurTest);
 
 		final User utilisateurTest2 = new User();
 		utilisateurTest2.setNom(NOM_UTILISATEUR_TEST_2_INITIAL);
 		utilisateurTest2.setPrenom(PRENOM_UTILISATEUR_TEST_2_INITIAL);
 		utilisateurTest2.setTelephone(TEL_CORRECT_2);
+		UserUtil.genererEmailDonneeTest(utilisateurTest2);
+		UserUtil.appliquerMdpParDefaut(utilisateurTest2);
 
 		final User utilisateurTestDelete = new User();
+		UserUtil.genererEmailDonneeTest(utilisateurTestDelete);
+		UserUtil.appliquerMdpParDefaut(utilisateurTestDelete);
 
 		this.ur.save(utilisateurTest);
 		this.ur.save(utilisateurTestDelete);
@@ -125,6 +132,8 @@ public class UserControllerTest {
 		utilisateurTest.setNom("Tartempion");
 		utilisateurTest.setPrenom("Jean");
 		utilisateurTest.setTelephone(TEL_TROP_PETIT);
+		UserUtil.genererEmailDonneeTest(utilisateurTest);
+		UserUtil.appliquerMdpParDefaut(utilisateurTest);
 
 		// TODO remplacer Void.class par User.class lorsque les requêtes retourneront ce qu'elles modifient
 		ResponseEntity<Void> response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
@@ -149,6 +158,8 @@ public class UserControllerTest {
 		utilisateurDoublonTest.setNom("Tartempionne");
 		utilisateurDoublonTest.setPrenom("Jeanne");
 		utilisateurDoublonTest.setTelephone(TEL_CORRECT_1);
+		UserUtil.genererEmailDonneeTest(utilisateurDoublonTest);
+		UserUtil.appliquerMdpParDefaut(utilisateurDoublonTest);
 
 		response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);

@@ -24,6 +24,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.TeamRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.TeamService;
+import com.example.demo.util.UserUtil;
 
 /**
  * Classe de test permettant de vérifier si les API de Team fonctionnent correctement.
@@ -107,10 +108,14 @@ public class TeamControllerTest {
 		final User utilisateurTest = new User();
 		utilisateurTest.setNom(NOM_UTILISATEUR_TEST_1_INITIAL);
 		utilisateurTest.setPrenom(PRENOM_UTILISATEUR_TEST_1_INITIAL);
+		UserUtil.genererEmailDonneeTest(utilisateurTest);
+		UserUtil.appliquerMdpParDefaut(utilisateurTest);
 
 		final User utilisateurTestDelete = new User();
 		utilisateurTestDelete.setNom(NOM_UTILISATEUR_TEST_2_INITIAL);
 		utilisateurTestDelete.setPrenom(PRENOM_UTILISATEUR_TEST_2_INITIAL);
+		UserUtil.genererEmailDonneeTest(utilisateurTestDelete);
+		UserUtil.appliquerMdpParDefaut(utilisateurTestDelete);
 
 		this.utilisateurTest = utilisateurTest;
 		this.utilisateurTestDelete = utilisateurTestDelete;

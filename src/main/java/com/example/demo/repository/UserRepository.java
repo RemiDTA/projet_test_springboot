@@ -15,6 +15,8 @@ import com.example.demo.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	List<User> findByEmail(String email);
+
 	List<User> findByTelephone(String numeroTelephone);
 
 	List<User> findByTelephoneStartingWith(String prefixe);

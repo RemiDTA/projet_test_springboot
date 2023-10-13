@@ -2,11 +2,11 @@ package com.example.demo.validation;
 
 import java.util.List;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
-
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
 public class EquipeValidator implements ConstraintValidator<EquipeValide, Team> {
 

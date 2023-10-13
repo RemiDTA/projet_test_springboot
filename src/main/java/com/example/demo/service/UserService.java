@@ -15,6 +15,7 @@ import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.repository.ProjetRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.EncodeurConfig;
 
 @Service
 public class UserService {
@@ -25,16 +26,23 @@ public class UserService {
 	@Autowired
 	private ProjetRepository pr;
 
+	@Autowired
+	EncodeurConfig encodeur;
+
 	public User creerUtilisateur(final User utilisateur) {
 		final String telephone = utilisateur.getTelephone();
 		if (this.recupererUtilisateurParTel(telephone) != null)
 			throw new IllegalArgumentException("Telephone déjà existant " + telephone);
+		utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(utilisateur.getMotPasse()));
 		return this.ur.save(utilisateur);
 	}
 
 	public User majUtilisateur(final User utilisateur) {
 		if (utilisateur.getId() == null)
 			throw new IllegalArgumentException("ID obligatoire");
+		final String motPasse = utilisateur.getMotPasse();
+		if (motPasse != null)
+			utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(motPasse));
 		return this.ur.save(utilisateur);
 	}
 
