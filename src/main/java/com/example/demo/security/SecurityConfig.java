@@ -24,21 +24,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 *
 	 * Nb : /toto/** => signifie toutes les urls sous toto (/toto/truc, /toto/truc/bidule, ...)
 	 * /toto/* => signifie toutes les urls DIRECTEMENT sous toto (/toto/truc, /toto/bidule, ...) mais pas /toto/truc/bidule
-	 * 
+	 *
 	 * NB 2 : Il faut exclure le /login sinon c'est comme si on demandait d'être authentifié pour s'authentifier
 	 */
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http
-	    .authorizeRequests()
-	    .antMatchers("/public/**").permitAll()
-	    .antMatchers("/admin/**").hasRole("ADMIN")
-	    .antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
-	    .anyRequest().authenticated()
-	    .and()
-	    .formLogin()
-	    .and()
-	    .logout().permitAll();
+				// csrf est une protection qui doit être desactivée pour faire fonctionner les appels POSTMAN
+				.csrf().disable()
+				.authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").hasRole("USER")
+				.antMatchers("/**").hasRole("ADMIN")
+				.antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
+				.anyRequest().authenticated()
+				.and()
+				.formLogin()
+				.and()
+				.logout().permitAll();
 	}
 
 	/**
