@@ -14,7 +14,7 @@ public class UserUtil {
 
 	public static final String EMAIL_ADMIN = "admin@gmail.com";
 
-	private static final String MDP_PAR_DEFAUT = "CHANGE_MOI";
+	public static final String MDP_PAR_DEFAUT = "CHANGE_MOI";
 
 	/**
 	 * Génère une addresse mail à partir du nom et prenom d'un user (utilisé pour la génération de données)

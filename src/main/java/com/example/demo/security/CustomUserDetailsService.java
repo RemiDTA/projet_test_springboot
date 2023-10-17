@@ -1,5 +1,7 @@
 package com.example.demo.security;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +26,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-		final User user = this.ur.findByEmail(email).get(0);
+		final List<User> listeUtilisateur = this.ur.findByEmail(email);
+		if (listeUtilisateur == null || listeUtilisateur.isEmpty()) {
+			throw new IllegalArgumentException(String.format("Utilisateur %s non trouvé", email));
+		}
+		final User user = listeUtilisateur.get(0);
 		if (user == null) {
 			throw new UsernameNotFoundException("User not found");
 		}

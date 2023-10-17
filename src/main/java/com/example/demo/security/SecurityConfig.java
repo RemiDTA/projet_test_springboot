@@ -37,10 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/**").hasRole("ADMIN")
 				.antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
 				.anyRequest().authenticated()
-				.and()
-				.formLogin()
-				.and()
-				.logout().permitAll();
+				.and().httpBasic()
+				.and().formLogin()
+				.and().logout().permitAll();
 	}
 
 	/**
@@ -48,6 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+		super.configure(auth);
 		auth.userDetailsService(this.userDetailsService);
 	}
 

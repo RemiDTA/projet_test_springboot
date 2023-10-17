@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +44,8 @@ import com.example.demo.util.UserUtil;
 @TestInstance(Lifecycle.PER_CLASS)
 public class TeamControllerTest {
 
+	private static final String URL_LOGIN = "/login";
+
 	private static final String URL_TEAM = "/team";
 
 	private static final String URL_TEAM_ID = URL_TEAM + "/%d";
@@ -53,6 +57,8 @@ public class TeamControllerTest {
 	private static final String PRENOM_UTILISATEUR_TEST_2_INITIAL = "JeanTeam";
 
 	private static final String NOM_UTILISATEUR_TEST_1_INITIAL = "PalvinTeam";
+
+	private HttpEntity<String> enteteConnexion = null;
 
 	private Team equipeTest = null;
 
@@ -78,6 +84,12 @@ public class TeamControllerTest {
 	 */
 	@Autowired
 	private TestRestTemplate restTemplate;
+
+	/**
+	 * Il s'agit de restTemplate avec les informations de connexions de l'admin
+	 */
+	@Autowired
+	private TestRestTemplate restTemplateBasicAuth;
 
 	@Autowired
 	private TeamRepository tr;
@@ -136,6 +148,13 @@ public class TeamControllerTest {
 		this.tr.save(equipeTest);
 		this.ur.save(utilisateurTest);
 
+		// Créez un en-tête d'authentification HTTP Basic
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setBasicAuth(UserUtil.EMAIL_ADMIN, UserUtil.MDP_PAR_DEFAUT);
+
+		// Créez une entité HTTP avec les en-têtes
+		this.restTemplateBasicAuth = this.restTemplate.withBasicAuth(UserUtil.EMAIL_ADMIN, UserUtil.MDP_PAR_DEFAUT);
+
 	}
 
 	@Test
@@ -144,14 +163,13 @@ public class TeamControllerTest {
 		// equipe.setChefEquipe(this.utilisateurTest);
 		equipe.setDescription("TEST");
 		equipe.setEmplacement("TEST_EMPL");
-		equipe.setEmplacement("TEST_EMPL");
 		final List<User> membreEquipe = new ArrayList<>();
 		membreEquipe.add(this.utilisateurTest);
 		equipe.setUsers(null);
 
 		this.equipeTestCreerTeam = equipe;
 
-		final ResponseEntity<Void> response = this.restTemplate.postForEntity(URL_TEAM, equipe, Void.class);
+		final ResponseEntity<Void> response = this.restTemplateBasicAuth.postForEntity(URL_TEAM, equipe, Void.class);
 
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
 	}
@@ -160,7 +178,7 @@ public class TeamControllerTest {
 	public void testListerEquipes() {
 		final long nombreEquipe = this.tr.count();
 
-		final ResponseEntity<List<Team>> response = this.restTemplate.exchange(URL_TEAM, HttpMethod.GET, null, this.responseTypeListeUtilisateur);
+		final ResponseEntity<List<Team>> response = this.restTemplateBasicAuth.exchange(URL_TEAM, HttpMethod.GET, null, this.responseTypeListeUtilisateur);
 
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
 		assertTrue(response.getBody().size() == nombreEquipe);
@@ -168,7 +186,7 @@ public class TeamControllerTest {
 
 	@Test
 	public void testRecupererEquipeParId() {
-		final ResponseEntity<Team> response = this.restTemplate.getForEntity(String.format(URL_TEAM_ID, this.equipeTest.getId()), Team.class);
+		final ResponseEntity<Team> response = this.restTemplateBasicAuth.getForEntity(String.format(URL_TEAM_ID, this.equipeTest.getId()), Team.class);
 
 		final Team equipe = response.getBody();
 		assertTrue(equipe.getId() == this.equipeTest.getId());
@@ -184,11 +202,11 @@ public class TeamControllerTest {
 
 	@Test
 	public void testSupprimerEquipe() {
-		this.restTemplate.delete(String.format(URL_TEAM_ID, this.equipeTestDelete.getId()));
+		this.restTemplateBasicAuth.delete(String.format(URL_TEAM_ID, this.equipeTestDelete.getId()));
 		assertFalse(this.tr.findById(this.equipeTestDelete.getId()).isPresent());
 
 		// Suppression d'une équipe associée à un utilisateur => ne doit pas fonctionner
-		this.restTemplate.delete(String.format(URL_TEAM_ID, this.equipeTest.getId()));
+		this.restTemplateBasicAuth.delete(String.format(URL_TEAM_ID, this.equipeTest.getId()));
 		assertTrue(this.tr.findById(this.equipeTest.getId()).isPresent());
 	}
 

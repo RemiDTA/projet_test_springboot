@@ -19,6 +19,7 @@ import com.example.demo.model.Projet;
 import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import com.example.demo.util.UserUtil;
 
 @RestController
 @RequestMapping("/user")
@@ -32,6 +33,8 @@ public class UserController {
 
 	@PostMapping
 	public User creerUtilisateur(@RequestBody final User utilisateur) {
+		if (utilisateur.getMotPasse() == null || utilisateur.getMotPasse().isEmpty())
+			UserUtil.appliquerMdpParDefaut(utilisateur);
 		return this.us.creerUtilisateur(utilisateur);
 	}
 

@@ -94,6 +94,11 @@ public class UserControllerTest {
 	private UserService us;
 
 	/**
+	 * Il s'agit de restTemplate avec les informations de connexions de l'admin
+	 */
+	private TestRestTemplate restTemplateBasicAuth;
+
+	/**
 	 * Création des données utilisés pour les JUNIT
 	 */
 	@BeforeAll
@@ -113,6 +118,8 @@ public class UserControllerTest {
 		UserUtil.appliquerMdpParDefaut(utilisateurTest2);
 
 		final User utilisateurTestDelete = new User();
+		utilisateurTestDelete.setNom("nom");
+		utilisateurTestDelete.setPrenom("prenom");
 		UserUtil.genererEmailDonneeTest(utilisateurTestDelete);
 		UserUtil.appliquerMdpParDefaut(utilisateurTestDelete);
 
@@ -122,6 +129,9 @@ public class UserControllerTest {
 		this.utilisateurTest1 = utilisateurTest;
 		this.utilisateurTest2 = utilisateurTest2;
 		this.utilisateurTestDelete = utilisateurTestDelete;
+
+		// Créez une entité HTTP avec les en-têtes
+		this.restTemplateBasicAuth = this.restTemplate.withBasicAuth(UserUtil.EMAIL_ADMIN, UserUtil.MDP_PAR_DEFAUT);
 	}
 
 	@Test
@@ -136,21 +146,21 @@ public class UserControllerTest {
 		UserUtil.appliquerMdpParDefaut(utilisateurTest);
 
 		// TODO remplacer Void.class par User.class lorsque les requêtes retourneront ce qu'elles modifient
-		ResponseEntity<Void> response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
+		ResponseEntity<Void> response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
 
 		// TODO à modifier lorsque les numéro d'erreur HTTP seront correctement gérer
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_TROP_GRAND);
-		response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_MAUVAIS_DEBUT);
-		response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_CORRECT_1);
-		response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
 		// TODO this.utilisateurTestCreerUser = response.getBody();
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
 
@@ -161,7 +171,7 @@ public class UserControllerTest {
 		UserUtil.genererEmailDonneeTest(utilisateurDoublonTest);
 		UserUtil.appliquerMdpParDefaut(utilisateurDoublonTest);
 
-		response = this.restTemplate.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -184,7 +194,7 @@ public class UserControllerTest {
 	public void testListerUsers() {
 		final long nombreUtilisateur = this.ur.count();
 
-		final ResponseEntity<List<User>> response = this.restTemplate.exchange(URL_USER, HttpMethod.GET, null, this.responseTypeListeUtilisateur);
+		final ResponseEntity<List<User>> response = this.restTemplateBasicAuth.exchange(URL_USER, HttpMethod.GET, null, this.responseTypeListeUtilisateur);
 
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
 
@@ -194,7 +204,7 @@ public class UserControllerTest {
 
 	@Test
 	public void testRecupererUserById() {
-		final ResponseEntity<User> response = this.restTemplate.getForEntity(String.format(URL_USER_ID, this.utilisateurTest2.getId()), User.class);
+		final ResponseEntity<User> response = this.restTemplateBasicAuth.getForEntity(String.format(URL_USER_ID, this.utilisateurTest2.getId()), User.class);
 
 		final User utilisateur = response.getBody();
 		// Je ne teste pas directement utilisateur.equals(utilisateurTest2) puisqu'il devrait s'agir de 2 instances différents
@@ -207,7 +217,7 @@ public class UserControllerTest {
 	@Test
 	@Rollback
 	public void testSupprimerUser() {
-		this.restTemplate.delete(String.format(URL_USER_ID, this.utilisateurTestDelete.getId()));
+		this.restTemplateBasicAuth.delete(String.format(URL_USER_ID, this.utilisateurTestDelete.getId()));
 		assertFalse(this.ur.findById(this.utilisateurTestDelete.getId()).isPresent());
 	}
 
