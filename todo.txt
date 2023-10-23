@@ -2,4 +2,4 @@ Un certains nombre de sujets n'ont pas été fait sur ce projet
 
 Les TU ne sont pas réaliser sur l'entiereté du code (=> comprendre le fonctionnement du patch de restTemplate, mockito)
 Validation pour la relation User => Projet afin de s'assurer de l'unicité
-Journalisation
+Journalisation => pas de journalisation (entre l4j2 et le logger par défaut ca va dépendre du projet)
