@@ -37,12 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				// csrf est une protection qui doit être desactivée pour faire fonctionner les appels POSTMAN
 				.csrf().disable()
-				.cors().and()
+				.cors().and() // La configuration est faite dans corsConfigurationSource
 				.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").hasRole("USER")
-				.antMatchers("/**").hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").permitAll() // normalement c'est .hasRole("USER")
+				// mais je ne vérifie plus à cause de sécurité CORS lorsque je fais un hasRole le bean corsConfigurationSource est ignoré
+				.antMatchers("/**").permitAll() // .hasRole("ADMIN")
 				.antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
-				.anyRequest().authenticated()
+				// .anyRequest().authenticated() // Oblige l'utilisateur à se connecter
 				.and().httpBasic()
 				.and().formLogin()
 				.and().logout().permitAll();
@@ -62,11 +63,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return this.encodeur.getEncodeur();
 	}
 
+	/**
+	 * Configuration sécurité CORS, il s'agit d'une sécurité qui intervient lorsqu'une URL externe au server requête sur le BO
+	 * Ce qui est le cas lorsque l'on a un BO et un Front en localhost sur 2 port différent
+	 *
+	 * @return
+	 */
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin("http://localhost:4200"); // Vous pouvez spécifier ici les origines autorisées
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+		configuration.addAllowedOrigin("http://localhost:4200"); // Autorisé mon front (qui utilise le port 4200) a appelé ce back
+		configuration.setAllowedMethods(Arrays.asList("*")); // Autorisé toutes les requêtes HTTP
 
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
