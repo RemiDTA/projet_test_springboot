@@ -2,6 +2,8 @@
 Montée en compétences Spring boot
 
 Pour executer ce projet les prérequis sont les suivants :
+Importer java 21 dans le projet, pour ce faire aller dans https://www.oracle.com/fr/java/technologies/downloads/ télécharger le jdk 21
+Ensuite aller faire pointer le jdk au niveau du projet, pour cela clic droit sur le projet => properties => java build path => alternate JRE => installed JRE => selectionner jdk 21 si présent sinon Add => Selectionner le dossier racine du jdk => finish => coché le jdk qui a été ajouté et apply and close
 Posséder une BDD mysql (cf log dans application.properties)
 Au niveau de la base de données locale, créer un schéma qui s'appel "schema_test" (pas besoin de créer de table Spring boot gère la génération de celles-ci)
 Lancer mySql et démarrer l'instance de la base de données (si au lancement de l'instance un message d'erreur apparaît, vérifier que le process MySQL80 est bien démarré dans l'onglet Service du gestionnaire de tâche, si ce n'est pas le cas => clic droit => démarrer)
