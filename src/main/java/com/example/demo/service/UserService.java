@@ -128,4 +128,16 @@ public class UserService {
 		return this.pr.findByCollaborateurs(this.recupererUtilisateurParId(idUtilisateur));
 	}
 
+	/**
+	 * Permet de récupérer l'équipe de l'utilisateur dont l'id est passé en paramètre
+	 *
+	 * @param idUtilisateur
+	 * @return
+	 */
+	public Team recupererEquipeUtilisateur(final Long idUtilisateur) {
+		final User utilisateur = this.recupererUtilisateurParId(idUtilisateur);
+		final Team equipe = utilisateur.getEquipe();
+		return equipe;
+	}
+
 }

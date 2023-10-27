@@ -62,6 +62,11 @@ public class UserController {
 		return this.us.recupererUtilisateurParId(id);
 	}
 
+	@GetMapping("/{id}/team")
+	public Team recupererEquipeUtilisateur(@PathVariable final Long id) {
+		return this.us.recupererEquipeUtilisateur(id);
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> supprimerUtilisateur(@PathVariable final Long id) {
 		this.us.supprimerUtilisateur(id);
