@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,11 +51,18 @@ public class UserController {
 
 	@GetMapping
 	public List<User> listerUtilisateurs(@RequestParam(name = "pageDebut", required = false) final Integer pageDebut) {
-		// Si non spécifié on retourne tout
-		if (pageDebut == null)
-			return this.us.recupererTousUtilisateurs();
-		// Si spécifié on fait de la pagination
-		return this.us.recupererTousUtilisateursAvecPagination(pageDebut, this.propLimite.getTaillePagination());
+		// // Si non spécifié on retourne tout
+		// if (pageDebut == null)
+		// return this.us.recupererTousUtilisateurs();
+		// // Si spécifié on fait de la pagination
+		// return this.us.recupererTousUtilisateursAvecPagination(pageDebut, this.propLimite.getTaillePagination());
+
+		// Lambda équivalente au code ci dessus
+		// map => retourne Optional.EMPTY si l'attribut "value" est null (qui est l'attribut que l'on passe lors de ofNullable([VALUE]))
+		// sinon applique la lambda passée en paramètre) sinon retourne un optional contenant le retour de la méthode
+		// orElseGet => si l'attribut "value" est null alors retourne le résultat de la lambda
+		return Optional.ofNullable(pageDebut).map(page -> this.us.recupererTousUtilisateursAvecPagination(pageDebut, this.propLimite.getTaillePagination()))
+				.orElseGet(() -> this.us.recupererTousUtilisateurs());
 	}
 
 	@GetMapping("/{id}")

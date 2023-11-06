@@ -31,35 +31,25 @@ public class UserService {
 
 	public User creerUtilisateur(final User utilisateur) {
 		final String telephone = utilisateur.getTelephone();
-		if (this.recupererUtilisateurParTel(telephone) != null)
-			throw new IllegalArgumentException("Telephone déjà existant " + telephone);
+		Optional.ofNullable(this.recupererUtilisateurParTel(telephone)).ifPresent(user -> {
+			throw new IllegalArgumentException("Telephone déjà existant");
+		});
 		utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(utilisateur.getMotPasse()));
 		return this.ur.save(utilisateur);
 	}
 
 	public User majUtilisateur(final User utilisateur) {
-		if (utilisateur.getId() == null)
-			throw new IllegalArgumentException("ID obligatoire");
-		final String motPasse = utilisateur.getMotPasse();
-		if (motPasse != null)
-			utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(motPasse));
+		Optional.ofNullable(utilisateur.getId()).orElseThrow(() -> new IllegalArgumentException("ID obligatoire"));
+		Optional.ofNullable(utilisateur.getMotPasse()).ifPresent(mdp -> utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(mdp)));
 		return this.ur.save(utilisateur);
 	}
 
 	public User recupererUtilisateurParId(final Long id) {
-		final Optional<User> optionalUtilisateur = this.ur.findById(id);
-		if (optionalUtilisateur.isEmpty())
-			throw new IllegalArgumentException(String.format("L'id %d ne correspond à aucun utilisateur", id));
-
-		return optionalUtilisateur.get();
+		return Optional.ofNullable(this.ur.findById(id)).orElseThrow(() -> new IllegalArgumentException(String.format("L'id %d ne correspond à aucun utilisateur", id))).get();
 	}
 
 	public User recupererUtilisateurParTel(final String telephone) {
-		final List<User> listeUtilisateurTrouver = this.ur.findByTelephone(telephone);
-		if (!listeUtilisateurTrouver.isEmpty())
-			return listeUtilisateurTrouver.get(0);
-
-		return null;
+		return this.ur.findByTelephone(telephone);
 	}
 
 	/**
@@ -107,6 +97,11 @@ public class UserService {
 	 * @return
 	 */
 	public User associerEquipe(final Team equipe, final long id) {
+		// J'ai essayer de passer en lambda expression mais cela ne fonctionne pas, normalement la map doit permettre d'executer le cas passant
+		// et le orElseThrow le cas où this.ur.findById(id) ne retourne pas de User
+		// return Optional.ofNullable(this.ur.findById(id)).map(utilisateur -> {
+		// utilisateur.setEquipe(equipe);
+		// return this.majUtilisateur(utilisateur);}).orElseThrow(() -> new IllegalArgumentException(String.format("Utilisateur non trouvée")));
 		final Optional<User> optionalUtilisateur = this.ur.findById(id);
 		if (optionalUtilisateur.isEmpty())
 			throw new IllegalArgumentException("Utilisateur non trouvée");
