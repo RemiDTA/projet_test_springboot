@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -22,11 +21,7 @@ public class TeamService {
 	private EntityManager entityManager;
 
 	public Team recupererEquipeParId(final long id) {
-		final Optional<Team> optionalEquipe = this.tr.findById(id);
-		if (optionalEquipe.isEmpty()) {
-			throw new IllegalArgumentException(String.format("L'id %d n'existe pas", id));
-		}
-		return optionalEquipe.get();
+		return this.tr.findById(id).orElseThrow(() -> new IllegalArgumentException(String.format("L'id %d n'existe pas", id)));
 	}
 
 	public List<Team> recupererEquipeParEmplacement(final String emplacement) {
@@ -50,9 +45,8 @@ public class TeamService {
 		// ce cache retourne la même instance que la variable equipe, il ne rerécupère pas les données au niveau de la base
 		// le this.entityManager.detach(equipe) permet justement de repartir dans la base mais normalement il n'est pas nécessaire de gérer manuellement ce genre de chose
 		this.entityManager.detach(equipe);
-		final Optional<Team> retour = this.tr.findById(equipe.getId());
 
-		return retour.orElse(null);
+		return this.tr.findById(equipe.getId()).orElse(null);
 	}
 
 	public Team majEquipe(final Team equipe) {

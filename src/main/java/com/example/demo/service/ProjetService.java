@@ -25,11 +25,7 @@ public class ProjetService {
 	UserRepository ur;
 
 	public Projet recupererProjetParId(final long id) {
-		final Optional<Projet> optionalProjet = this.pr.findById(id);
-		if (optionalProjet.isEmpty())
-			throw new IllegalArgumentException("Le projet n'existe pas " + id);
-
-		return optionalProjet.get();
+		return this.pr.findById(id).orElseThrow(() -> new IllegalArgumentException("Le projet n'existe pas " + id));
 	}
 
 	public List<Projet> listerProjets() {
@@ -44,7 +40,6 @@ public class ProjetService {
 	 * @return
 	 */
 	public Projet ajouterCollaborateurs(final Long id, final List<User> listeNouveauxCollaborateurs) {
-
 		final Projet projet = this.recupererProjetParId(id);
 		return this.ajouterCollaborateurs(projet, listeNouveauxCollaborateurs);
 	}
@@ -58,11 +53,11 @@ public class ProjetService {
 	 */
 	public Projet ajouterCollaborateurs(final Projet projet, final List<User> listeNouveauxCollaborateurs) {
 		final List<User> utilisateursActuels = projet.getCollaborateurs();
-		if (utilisateursActuels != null) {
-			utilisateursActuels.addAll(listeNouveauxCollaborateurs);
-		} else {
-			projet.setCollaborateurs(listeNouveauxCollaborateurs);
-		}
+		Optional.ofNullable(utilisateursActuels).ifPresentOrElse(
+				listeUtilisateurCourant -> {
+					listeUtilisateurCourant.addAll(listeNouveauxCollaborateurs);
+				},
+				() -> projet.setCollaborateurs(listeNouveauxCollaborateurs));
 
 		return this.pr.save(projet);
 	}

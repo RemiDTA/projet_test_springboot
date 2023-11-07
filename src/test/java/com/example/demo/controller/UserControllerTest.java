@@ -21,7 +21,6 @@ import org.springframework.test.annotation.Rollback;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.UserService;
 import com.example.demo.util.UserUtil;
 
 /**
@@ -90,9 +89,6 @@ public class UserControllerTest {
 	@Autowired
 	private UserRepository ur;
 
-	@Autowired
-	private UserService us;
-
 	/**
 	 * Il s'agit de restTemplate avec les informations de connexions de l'admin
 	 */
@@ -145,24 +141,24 @@ public class UserControllerTest {
 		UserUtil.genererEmailDonneeTest(utilisateurTest);
 		UserUtil.appliquerMdpParDefaut(utilisateurTest);
 
-		// TODO remplacer Void.class par User.class lorsque les requêtes retourneront ce qu'elles modifient
-		ResponseEntity<Void> response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
+		ResponseEntity<User> response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, User.class);
 
 		// TODO à modifier lorsque les numéro d'erreur HTTP seront correctement gérer
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_TROP_GRAND);
-		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, User.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_MAUVAIS_DEBUT);
-		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, User.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 
 		utilisateurTest.setTelephone(TEL_CORRECT_1);
-		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, User.class);
 		// TODO this.utilisateurTestCreerUser = response.getBody();
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
+		this.utilisateurTestCreerUser = response.getBody();
 
 		final User utilisateurDoublonTest = new User();
 		utilisateurDoublonTest.setNom("Tartempionne");
@@ -171,7 +167,7 @@ public class UserControllerTest {
 		UserUtil.genererEmailDonneeTest(utilisateurDoublonTest);
 		UserUtil.appliquerMdpParDefaut(utilisateurDoublonTest);
 
-		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, Void.class);
+		response = this.restTemplateBasicAuth.postForEntity(URL_USER, utilisateurTest, User.class);
 		assertTrue(response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -226,7 +222,8 @@ public class UserControllerTest {
 		this.ur.delete(this.utilisateurTest1);
 		this.ur.delete(this.utilisateurTest2);
 		this.ur.delete(this.utilisateurTestDelete);
-		// TODO lorsque les requêtes retourneront ce qu'elles modifient, il faudra supprimer le user creer par testCreerUser()
+		if (this.utilisateurTestCreerUser != null)
+			this.ur.delete(this.utilisateurTestCreerUser);
 	}
 
 }

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -25,7 +24,6 @@ import com.example.demo.model.Team;
 import com.example.demo.model.User;
 import com.example.demo.repository.TeamRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.service.TeamService;
 import com.example.demo.util.UserUtil;
 
 /**
@@ -44,8 +42,6 @@ import com.example.demo.util.UserUtil;
 @TestInstance(Lifecycle.PER_CLASS)
 public class TeamControllerTest {
 
-	private static final String URL_LOGIN = "/login";
-
 	private static final String URL_TEAM = "/team";
 
 	private static final String URL_TEAM_ID = URL_TEAM + "/%d";
@@ -57,8 +53,6 @@ public class TeamControllerTest {
 	private static final String PRENOM_UTILISATEUR_TEST_2_INITIAL = "JeanTeam";
 
 	private static final String NOM_UTILISATEUR_TEST_1_INITIAL = "PalvinTeam";
-
-	private HttpEntity<String> enteteConnexion = null;
 
 	private Team equipeTest = null;
 
@@ -93,9 +87,6 @@ public class TeamControllerTest {
 
 	@Autowired
 	private TeamRepository tr;
-
-	@Autowired
-	private TeamService ts;
 
 	@Autowired
 	private UserRepository ur;
@@ -169,9 +160,10 @@ public class TeamControllerTest {
 
 		this.equipeTestCreerTeam = equipe;
 
-		final ResponseEntity<Void> response = this.restTemplateBasicAuth.postForEntity(URL_TEAM, equipe, Void.class);
+		final ResponseEntity<Team> response = this.restTemplateBasicAuth.postForEntity(URL_TEAM, equipe, Team.class);
 
 		assertTrue(response.getStatusCode() == HttpStatus.OK);
+		this.equipeTestCreerTeam = response.getBody();
 	}
 
 	@Test
@@ -228,7 +220,9 @@ public class TeamControllerTest {
 
 		this.tr.delete(this.equipeTest);
 		this.tr.delete(this.equipeTestDelete);
-		// TODO lorsque les requêtes retourneront ce qu'elles modifient, il faudra supprimer le user creer par testCreerEquipe()
+		System.out.println(this.equipeTestCreerTeam.getId());
+		if (this.equipeTestCreerTeam != null)
+			this.tr.delete(this.equipeTestCreerTeam);
 	}
 
 }

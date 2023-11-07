@@ -35,13 +35,7 @@ public class EquipeValidator implements ConstraintValidator<EquipeValide, Team> 
 			return true;
 		if (listeMembreEquipe == null)
 			return false; // Si on a un chef d'équipe mais aucun membre c'est KO
-		for (final User membreEquipe : listeMembreEquipe) {
-			if (chefEquipe.getId() == membreEquipe.getId()) {
-				return true;
-			}
-		}
-
-		return false;
+		return listeMembreEquipe.stream().anyMatch(membreEquipe -> chefEquipe.getId() == membreEquipe.getId());
 	}
 
 }

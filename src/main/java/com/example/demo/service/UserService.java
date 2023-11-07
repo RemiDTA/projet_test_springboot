@@ -97,18 +97,12 @@ public class UserService {
 	 * @return
 	 */
 	public User associerEquipe(final Team equipe, final long id) {
-		// J'ai essayer de passer en lambda expression mais cela ne fonctionne pas, normalement la map doit permettre d'executer le cas passant
-		// et le orElseThrow le cas où this.ur.findById(id) ne retourne pas de User
-		// return Optional.ofNullable(this.ur.findById(id)).map(utilisateur -> {
-		// utilisateur.setEquipe(equipe);
-		// return this.majUtilisateur(utilisateur);}).orElseThrow(() -> new IllegalArgumentException(String.format("Utilisateur non trouvée")));
-		final Optional<User> optionalUtilisateur = this.ur.findById(id);
-		if (optionalUtilisateur.isEmpty())
-			throw new IllegalArgumentException("Utilisateur non trouvée");
-		final User utilisateur = optionalUtilisateur.get();
-
-		utilisateur.setEquipe(equipe);
-		return this.majUtilisateur(utilisateur);
+		// Lambda : Si findById retourne null je throw dans le orElseThrow sinon je retourne la valeur du Optional (le User)
+		// La map permet de réaliser pour la valeur du Optional le traitement désiré, s'il n'y a pas de valeur, retourne un empty Optional (qui sera traité par le orElseThrow)
+		return this.ur.findById(id).map(utilisateur -> {
+			utilisateur.setEquipe(equipe);
+			return this.majUtilisateur(utilisateur);
+		}).orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvée"));
 	}
 
 	public List<User> recupererUtilisateurEn07() {
@@ -131,8 +125,7 @@ public class UserService {
 	 */
 	public Team recupererEquipeUtilisateur(final Long idUtilisateur) {
 		final User utilisateur = this.recupererUtilisateurParId(idUtilisateur);
-		final Team equipe = utilisateur.getEquipe();
-		return equipe;
+		return utilisateur.getEquipe();
 	}
 
 }
