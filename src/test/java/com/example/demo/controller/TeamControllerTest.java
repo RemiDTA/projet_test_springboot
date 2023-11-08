@@ -220,7 +220,6 @@ public class TeamControllerTest {
 
 		this.tr.delete(this.equipeTest);
 		this.tr.delete(this.equipeTestDelete);
-		System.out.println(this.equipeTestCreerTeam.getId());
 		if (this.equipeTestCreerTeam != null)
 			this.tr.delete(this.equipeTestCreerTeam);
 	}
