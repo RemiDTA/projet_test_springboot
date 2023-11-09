@@ -78,8 +78,8 @@ public class ProjetService {
 		final Team equipe = this.ts.recupererEquipeParId(idEquipe);
 		final Projet projet = this.recupererProjetParId(idProjet);
 
-		final List<User> listeUser = this.mergerUtilisateurProjetEquipe(projet.getCollaborateurs(), equipe.getUsers());
-		return this.ajouterCollaborateurs(projet, listeUser);
+		final List<User> listeMembreEquipeMerger = this.recupererMembreEquipeNonPresentProjet(projet.getCollaborateurs(), equipe.getUsers());
+		return this.ajouterCollaborateurs(projet, listeMembreEquipeMerger);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ProjetService {
 	 * @param listeMembreEquipe
 	 * @return
 	 */
-	private List<User> mergerUtilisateurProjetEquipe(final List<User> listeCollaborateurProjet, final List<User> listeMembreEquipe) {
+	private List<User> recupererMembreEquipeNonPresentProjet(final List<User> listeCollaborateurProjet, final List<User> listeMembreEquipe) {
 		final List<User> resultat = new ArrayList<User>();
 		listeMembreEquipe.stream().forEach(membreEquipe -> {
 			if (!listeCollaborateurProjet.stream().anyMatch(collaborateur -> collaborateur.getId() == membreEquipe.getId())) {
