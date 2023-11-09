@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,7 +33,9 @@ public class Projet {
 
 	@JsonIgnore // Relation n,n, il y a une URL spécifique pour afficher les users appartenant à un projet et les projets de l'utilisateur
 	@ManyToMany
-	@JoinTable(name = "projet_collabo") // Nom de la table de jointure en BDD
+	@JoinTable(name = "projet_collabo"// Nom de la table de jointure en BDD
+			, uniqueConstraints = @UniqueConstraint(columnNames = { "projets_id", "collaborateurs_id" }))
+	// Nb : Si l'on souhaitait paramétrer le nom des colonnes de jointure, on utiliserait joinColumns et inverseJoinColumns (joinColumns = @JoinColumn(name = "idprojet"))
 	private List<User> collaborateurs;
 
 	public Long getId() {

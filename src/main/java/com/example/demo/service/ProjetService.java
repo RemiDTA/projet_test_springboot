@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +76,27 @@ public class ProjetService {
 	 */
 	public Projet ajouterCollaborateursEquipe(final Long idProjet, final Long idEquipe) {
 		final Team equipe = this.ts.recupererEquipeParId(idEquipe);
-		return this.ajouterCollaborateurs(this.recupererProjetParId(idProjet), equipe.getUsers());
+		final Projet projet = this.recupererProjetParId(idProjet);
+
+		final List<User> listeUser = this.mergerUtilisateurProjetEquipe(projet.getCollaborateurs(), equipe.getUsers());
+		return this.ajouterCollaborateurs(projet, listeUser);
+	}
+
+	/**
+	 * Permet de récuperer les utilisateurs présent dans la listeMembreEquipe qui n'est pas présente dans la listeCollaborateurProjet
+	 *
+	 * @param listeCollaborateurProjet
+	 * @param listeMembreEquipe
+	 * @return
+	 */
+	private List<User> mergerUtilisateurProjetEquipe(final List<User> listeCollaborateurProjet, final List<User> listeMembreEquipe) {
+		final List<User> resultat = new ArrayList<User>();
+		listeMembreEquipe.stream().forEach(membreEquipe -> {
+			if (!listeCollaborateurProjet.stream().anyMatch(collaborateur -> collaborateur.getId() == membreEquipe.getId())) {
+				resultat.add(membreEquipe);
+			}
+		});
+		return resultat;
 	}
 
 	/**
