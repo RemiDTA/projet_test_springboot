@@ -81,7 +81,7 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PatchMapping("associer_equipe/{id}")
+	@PatchMapping("{id}/associer_equipe")
 	public User associerEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
 		return this.us.associerEquipe(equipe, id);
 	}
