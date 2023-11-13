@@ -38,10 +38,23 @@ public class UserService {
 		return this.ur.save(utilisateur);
 	}
 
+	/**
+	 * Permet de merger les informations de l'utilisateur appelant avec les données en base
+	 *
+	 * @param utilisateur
+	 * @return
+	 */
 	public User majUtilisateur(final User utilisateur) {
+
 		Optional.ofNullable(utilisateur.getId()).orElseThrow(() -> new IllegalArgumentException("ID obligatoire"));
-		Optional.ofNullable(utilisateur.getMotPasse()).ifPresent(mdp -> utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(mdp)));
-		return this.ur.save(utilisateur);
+		final User utilisateurBdd = this.recupererUtilisateurParId(utilisateur.getId());
+
+		Optional.ofNullable(utilisateur.getMotPasse()).ifPresent(mdp -> utilisateurBdd.setMotPasse(this.encodeur.getEncodeur().encode(mdp)));
+		Optional.ofNullable(utilisateur.getEmail()).ifPresent(email -> utilisateurBdd.setEmail(email));
+		Optional.ofNullable(utilisateur.getNom()).ifPresent(nom -> utilisateurBdd.setNom(nom));
+		Optional.ofNullable(utilisateur.getPrenom()).ifPresent(prenom -> utilisateurBdd.setPrenom(prenom));
+		Optional.ofNullable(utilisateur.getTelephone()).ifPresent(telephone -> utilisateurBdd.setTelephone(telephone));
+		return this.ur.save(utilisateurBdd);
 	}
 
 	public User recupererUtilisateurParId(final Long id) {
