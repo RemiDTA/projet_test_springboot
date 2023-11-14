@@ -39,11 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.cors().and() // La configuration est faite dans corsConfigurationSource
 				.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").permitAll() // normalement c'est .hasRole("USER")
-				// mais je ne vérifie plus à cause de sécurité CORS lorsque je fais un hasRole le bean corsConfigurationSource est ignoré
-				.antMatchers("/**").permitAll() // .hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").hasRole("USER")
+				.antMatchers("/**").hasRole("ADMIN")
 				.antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
-				// .anyRequest().authenticated() // Oblige l'utilisateur à se connecter
+				.anyRequest().authenticated() // Oblige l'utilisateur à se connecter
 				.and().httpBasic()
 				.and().formLogin()
 				.and().logout().permitAll();
