@@ -118,4 +118,13 @@ public class ProjetService {
 		this.pr.deleteAll();
 	}
 
+	/**
+	 * Suppression d'un projet
+	 *
+	 * @param id
+	 */
+	public void supprimerProjet(final Long id) {
+		this.pr.deleteById(id);
+	}
+
 }

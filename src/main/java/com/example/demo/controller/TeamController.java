@@ -59,7 +59,6 @@ public class TeamController {
 
 	/**
 	 * La suppression d'une équipe est possible sous les conditions suivantes :
-	 * - Il n'existe aucun utilisateur qui appartienne à cet équipe
 	 *
 	 * @param id
 	 */
