@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.model.Team;
 import com.example.demo.repository.TeamRepository;
@@ -16,6 +17,9 @@ public class TeamService {
 
 	@Autowired
 	TeamRepository tr;
+
+	@Autowired
+	UserService us;
 
 	@Autowired
 	private EntityManager entityManager;
@@ -66,8 +70,11 @@ public class TeamService {
 	 *
 	 * @param id
 	 */
+	@Transactional
 	public void supprimerEquipe(final long id) {
 		final Team equipe = this.recupererEquipeParId(id);
+		// Si l'équipe contient des utilisateurs, il faut d'abord retirer l'équipe de chacun des utilisateurs avant de la supprimer
+		equipe.getUsers().stream().forEach(user -> this.us.associerEquipe(null, user.getId()));
 		this.tr.delete(equipe);
 	}
 

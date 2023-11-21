@@ -82,7 +82,7 @@ public class UserController {
 	}
 
 	@PatchMapping("{id}/associer_equipe")
-	public User associerEquipe(@RequestBody final Team equipe, @PathVariable final long id) {
+	public User associerEquipe(@RequestBody(required = false) final Team equipe, @PathVariable final long id) {
 		return this.us.associerEquipe(equipe, id);
 	}
 
