@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -53,8 +54,19 @@ public class TeamService {
 		return this.tr.findById(equipe.getId()).orElse(null);
 	}
 
+	/**
+	 * Permet de merger les informations de l'équipe appelant avec les données en base
+	 *
+	 * @param equipe
+	 * @return
+	 */
 	public Team majEquipe(final Team equipe) {
-		return this.tr.save(equipe);
+		final Team equipeBdd = this.recupererEquipeParId(equipe.getId());
+		Optional.ofNullable(equipe.getDescription()).ifPresent(description -> equipeBdd.setDescription(description));
+		Optional.ofNullable(equipe.getEmplacement()).ifPresent(emplacement -> equipeBdd.setEmplacement(emplacement));
+		Optional.ofNullable(equipe.getChefEquipe()).ifPresent(chefEquipe -> equipeBdd.setChefEquipe(chefEquipe));
+
+		return this.tr.save(equipeBdd);
 	}
 
 	public List<Team> recupererToutesEquipes() {
