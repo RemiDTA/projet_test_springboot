@@ -64,7 +64,7 @@ public class ProjetService {
 	}
 
 	public Projet creerProjet(final Projet projet) {
-		return this.pr.save(projet);
+		return this.pr.saveAndFlush(projet);
 	}
 
 	/**

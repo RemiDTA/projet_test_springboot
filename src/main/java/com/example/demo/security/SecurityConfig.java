@@ -39,13 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.cors().and() // La configuration est faite dans corsConfigurationSource
 				.authorizeRequests()
+				.antMatchers("/h2-console/**").permitAll() // A ne pas faire pour de vrai, mais permet d'accéder à la BDD sans se loguer
 				.antMatchers(HttpMethod.GET, "/user/**", "/team/**").hasRole("USER")
 				.antMatchers("/**").hasRole("ADMIN")
 				.antMatchers("/login").permitAll() // Exclure la page de connexion de l'authentification
 				.anyRequest().authenticated() // Oblige l'utilisateur à se connecter
 				.and().httpBasic()
 				.and().formLogin()
-				.and().logout().permitAll();
+				.and().logout().permitAll()
+				.and().headers().frameOptions().disable();				// Utilisé pour H2 (la sécurité avant tout)
 	}
 
 	/**

@@ -35,7 +35,7 @@ public class UserService {
 			throw new IllegalArgumentException("Telephone déjà existant");
 		});
 		utilisateur.setMotPasse(this.encodeur.getEncodeur().encode(utilisateur.getMotPasse()));
-		return this.ur.save(utilisateur);
+		return this.ur.saveAndFlush(utilisateur);
 	}
 
 	/**

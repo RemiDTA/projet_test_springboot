@@ -25,7 +25,7 @@ import com.example.demo.validation.EquipeValide;
 public class Team {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
 	@Column(length = 150)

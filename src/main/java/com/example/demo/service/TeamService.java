@@ -43,7 +43,7 @@ public class TeamService {
 	public Team creerEquipe(final Team equipe) {
 		// Règle métier sur l'initialisation de la date de création
 		equipe.setDateCreation(LocalDate.now());
-		this.tr.save(equipe);
+		this.tr.saveAndFlush(equipe);
 
 		// Globalement à éviter mais je le conserve au cas où
 		// Le problème c'est que lorsque l'on execute le save() suivi d'un findById(), un cache est présent
@@ -66,7 +66,7 @@ public class TeamService {
 		Optional.ofNullable(equipe.getEmplacement()).ifPresent(emplacement -> equipeBdd.setEmplacement(emplacement));
 		Optional.ofNullable(equipe.getChefEquipe()).ifPresent(chefEquipe -> equipeBdd.setChefEquipe(chefEquipe));
 
-		return this.tr.save(equipeBdd);
+		return this.tr.saveAndFlush(equipeBdd);
 	}
 
 	public List<Team> recupererToutesEquipes() {
